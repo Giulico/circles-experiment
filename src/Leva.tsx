@@ -7,6 +7,7 @@ export type Controls = {
   totalCircles: number;
   intersection: number;
   colorRange: [number, number];
+  paddingFactor: number;
 };
 
 const initialValues: Controls = {
@@ -15,6 +16,7 @@ const initialValues: Controls = {
   totalCircles: 50,
   intersection: 0.2,
   colorRange: [-0.3, 0.3],
+  paddingFactor: 0,
 };
 
 export const LevaContext = createContext<Controls>(initialValues);
@@ -66,6 +68,15 @@ function Leva({ children }: { children: ReactNode }) {
       step: 0.01,
       onEditEnd: (val) => {
         setState((s) => ({ ...s, colorRange: val }));
+      },
+    },
+    paddingFactor: {
+      value: initialValues.paddingFactor,
+      min: 0,
+      max: 200,
+      step: 1,
+      onEditEnd: (val) => {
+        setState((s) => ({ ...s, paddingFactor: val }));
       },
     },
   });

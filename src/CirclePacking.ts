@@ -14,6 +14,7 @@ type CirclePackingConstructor = {
   totalCircles: number;
   intersection: number;
   colorRange: number[];
+  paddingFactor: number;
 };
 
 class CirclePacking {
@@ -24,6 +25,7 @@ class CirclePacking {
   totalCircles = 0;
   intersection = 0;
   colorRange = [0, 0];
+  paddingFactor = 0;
 
   size = 0;
   context: CanvasRenderingContext2D | null;
@@ -38,6 +40,7 @@ class CirclePacking {
     totalCircles,
     intersection,
     colorRange,
+    paddingFactor,
   }: CirclePackingConstructor) {
     if (!canvas) {
       throw "CirclePacking needs a canvas";
@@ -48,6 +51,7 @@ class CirclePacking {
     this.totalCircles = totalCircles;
     this.intersection = intersection;
     this.colorRange = colorRange;
+    this.paddingFactor = paddingFactor;
 
     this.context = canvas.getContext("2d");
 
@@ -91,12 +95,14 @@ class CirclePacking {
     totalCircles,
     intersection,
     colorRange,
+    paddingFactor,
   }: Omit<CirclePackingConstructor, "canvas">) {
     this.minRadius = minRadius;
     this.maxRadius = maxRadius;
     this.totalCircles = totalCircles;
     this.intersection = intersection;
     this.colorRange = colorRange;
+    this.paddingFactor = paddingFactor;
 
     this.clear();
     this.begin();
@@ -134,12 +140,8 @@ class CirclePacking {
       return;
     }
 
-    for (
-      let radiusSize = this.minRadius;
-      radiusSize < this.maxRadius;
-      radiusSize++
-    ) {
-      newCircle.radius = radiusSize;
+    for (let radius = this.minRadius; radius < this.maxRadius; radius++) {
+      newCircle.radius = radius;
       if (this.doesCircleHaveACollision(newCircle)) {
         newCircle.radius--;
         break;
@@ -164,7 +166,7 @@ class CirclePacking {
   }
 
   doesCircleHaveACollision(circle: Circle): boolean {
-    const padding = Math.random() * (this.size / 6);
+    const padding = this.paddingFactor;
 
     // Check collision with other circles
     for (let i = 0; i < this.circles.length; i++) {
